@@ -17,7 +17,7 @@ void SetColor(int color = 7)
 	SetConsoleTextAttribute(hConsole,color);
 }
 
-class grid //®æ¤l 
+class grid //æ ¼å­ 
 {
 public:
 	int value;	bool blocked;		
@@ -53,9 +53,9 @@ public:
     }		
 protected:
 	int score;
-	bool full; //­Y½L­±º¡¤F 
-	bool win; //·í¥X²{2048®É¡A ¬°true 
-	bool moved; //¤w²¾°Ê (Á×§K¿é¤J¿ùªº¤è¦V) 
+	bool full; //è‹¥ç›¤é¢æ»¿äº† 
+	bool win; //ç•¶å‡ºç¾2048æ™‚ï¼Œ ç‚ºtrue 
+	bool moved; //å·²ç§»å‹• (é¿å…è¼¸å…¥éŒ¯çš„æ–¹å‘) 
 	int level;
 	
 	void undo(grid** board, grid** Bboard) {
@@ -65,9 +65,9 @@ protected:
 			}    	
 	}	 
     virtual void drawBoard() = 0;
-    virtual void waitKey() //µ¥«İª±®a¿é¤J¤è¦V 
+    virtual void waitKey() //ç­‰å¾…ç©å®¶è¼¸å…¥æ–¹å‘ 
     {
-		moved = false; //©|¥¼²¾°Ê 
+		moved = false; //å°šæœªç§»å‹• 
 		char c; 
 		cout << "(W)Up (S)Down (A)Left (D)Right   (R)Undo (Q)Quit\n"; 
 		c = getch(); 
@@ -103,10 +103,10 @@ protected:
 				    int a, b;
 				    do
 				    { a = rand() % level; b = rand() % level; }
-				    while( board[a][b].value ); //ª½¨ì§ä¨ìªÅªº®æ¡A¦A¶i¦æ¤U¤@¨B 
+				    while( board[a][b].value ); //ç›´åˆ°æ‰¾åˆ°ç©ºçš„æ ¼ï¼Œå†é€²è¡Œä¸‹ä¸€æ­¥ 
 		 
 				    int s = rand() % 100;
-				    if( s > 89 ) board[a][b].value = 4; //¦³10%ªº¾÷²v¥X²{4 
+				    if( s > 89 ) board[a][b].value = 4; //æœ‰10%çš„æ©Ÿç‡å‡ºç¾4 
 				    else board[a][b].value = 2;
 				    if( canMove(board) ) return;
 				}
@@ -119,7 +119,7 @@ protected:
 			if( !board[j][i].value ) return true;
 	 
 		for( int i = 0; i < level; i++ )
-		    for( int j = 0; j < level; j++ ) { //­Y¦³¬Û¾F¨â­Ó¬Ûµ¥(¥i¥H¦X¨Ö) 
+		    for( int j = 0; j < level; j++ ) { //è‹¥æœ‰ç›¸é„°å…©å€‹ç›¸ç­‰(å¯ä»¥åˆä½µ) 
 				if( canCombine( j + 1, i, board[j][i].value, board ) ) return true;
 				if( canCombine( j - 1, i, board[j][i].value, board ) ) return true;
 				if( canCombine( j, i + 1, board[j][i].value, board ) ) return true;
@@ -129,7 +129,7 @@ protected:
     }
     bool canCombine( int x, int y, int v, grid** board ) 
     {
-		if( x < 0 || x > level-1 || y < 0 || y > level-1 ) return false; //­Y¶W¹LÃä¬É 
+		if( x < 0 || x > level-1 || y < 0 || y > level-1 ) return false; //è‹¥è¶…éé‚Šç•Œ 
 		return board[x][y].value == v; // 
     }
     virtual void move( Direct d, grid** board, bool& moved, int& score ) // the user key to move
@@ -174,15 +174,15 @@ protected:
     }    
     void moveVert( int x, int y, int d, grid** board, bool& moved, int& score ) // vertically move 
     {
-		if( board[x][y + d].value && board[x][y + d].value == board[x][y].value && !board[x][y].blocked && !board[x][y + d].blocked  ) //¥Ø¼Ğ®æ¤£¬°0¡A¥B©M¥»®æ¬Ûµ¥¡A¦X¨Ö 
+		if( board[x][y + d].value && board[x][y + d].value == board[x][y].value && !board[x][y].blocked && !board[x][y + d].blocked  ) //ç›®æ¨™æ ¼ä¸ç‚º0ï¼Œä¸”å’Œæœ¬æ ¼ç›¸ç­‰ï¼Œåˆä½µ 
 		{
 		    board[x][y].value = 0;
 		    board[x][y + d].value *= 2;
 		    score += board[x][y + d].value;
-		    board[x][y + d].blocked = true; //¦¹¦^¦X¤º¡A¥Ø¼Ğ®æ¤£¯à¦A©M¨ä¥L¦X¨Ö 
+		    board[x][y + d].blocked = true; //æ­¤å›åˆå…§ï¼Œç›®æ¨™æ ¼ä¸èƒ½å†å’Œå…¶ä»–åˆä½µ 
 		    moved = true;
 		}
-		else if( !board[x][y + d].value && board[x][y].value ) //²¾°Ê¨ìªÅ®æ 
+		else if( !board[x][y + d].value && board[x][y].value ) //ç§»å‹•åˆ°ç©ºæ ¼ 
 		{
 		    board[x][y + d].value = board[x][y].value;
 		    board[x][y].value = 0;
@@ -214,7 +214,7 @@ class game1 : public game // single-player mode
 {
 private:
 	void drawBoard() {
-		system( "cls" ); //²MªÅµøµ¡ 
+		system( "cls" ); //æ¸…ç©ºè¦–çª— 
 		cout << "SCORE: " << score << endl << endl;
 		
 		//just for color
@@ -322,7 +322,7 @@ protected:
 	bool moved2, win2, full2;	int score2;
 	
 	void drawBoard() {
-		system( "cls" ); //²MªÅµøµ¡ 
+		system( "cls" ); //æ¸…ç©ºè¦–çª— 
 		cout << "SCORE1: " << setw( 5 ) << score << "                       SCORE2: " << setw( 5 ) << score2 <<endl << endl;
 		int max = 0;
 		for( int i = 0; i < level; i++ ) 
@@ -383,7 +383,7 @@ protected:
     }
 	virtual void waitKey() // wait for user to key 
     {
-		moved = false; //©|¥¼²¾°Ê 
+		moved = false; //å°šæœªç§»å‹• 
 		moved2 = false;
 		char c; 
 		cout << "(W)Up (S)Down (A)Left (D)Right     (I)Up (K)Down (J)Left (L)Right \n\n"; 
@@ -413,7 +413,7 @@ protected:
 		    	board2[j][i].blocked = false;
 			}
     }
-    void addGrid2(grid**board2) //¼W¥[¤@­Ó2©Î4¦bªÅ®æ 
+    void addGrid2(grid**board2) //å¢åŠ ä¸€å€‹2æˆ–4åœ¨ç©ºæ ¼ 
     {
 		for( int i = 0; i < level; i++ )
 		    for( int j = 0; j < level; j++ )
@@ -421,23 +421,23 @@ protected:
 				    int a, b;
 				    do
 				    { a = rand() % level; b = rand() % level; }
-				    while( board2[a][b].value ); //ª½¨ì§ä¨ìªÅªº®æ¡A¦A¶i¦æ¤U¤@¨B 
+				    while( board2[a][b].value ); //ç›´åˆ°æ‰¾åˆ°ç©ºçš„æ ¼ï¼Œå†é€²è¡Œä¸‹ä¸€æ­¥ 
 		
 				    int s = rand() % 100;
-				    if( s > 89 ) board2[a][b].value = 4; //¦³10%ªº¾÷²v¥X²{4 
+				    if( s > 89 ) board2[a][b].value = 4; //æœ‰10%çš„æ©Ÿç‡å‡ºç¾4 
 				    else board2[a][b].value = 2;
 				    if( canMove(board2) ) return;
 				}
 		full2 = true;
     }	
 };
-class game22 : public game2
+class game22 : public game2 // double-player and iteraction mode
 {
 public:
 private:
-	virtual void waitKey() //µ¥«İª±®a¿é¤J¤è¦V 
+	virtual void waitKey() //ç­‰å¾…ç©å®¶è¼¸å…¥æ–¹å‘ 
     {
-		moved = false; //©|¥¼²¾°Ê 
+		moved = false; //å°šæœªç§»å‹• 
 		moved2 = false;
 		char c; 
 		cout << "(W)Up (S)Down (A)Left (D)Right     (I)Up (K)Down (J)Left (L)Right \n\n"; 
@@ -504,7 +504,7 @@ int main()
 			SetColor(15);
 			cout << "Enter level n, then you will get the gameboard in n*n.\n\n"; 
 			SetColor();
-			cout << "Enter the level you want (recommend¡G4 ~ 9): \n";
+			cout << "Enter the level you want (recommendï¼š4 ~ 9): \n";
 			cin >> level;
 			if (level > 9) {
 				cout << "Over the limit, please enter again\n";
@@ -544,14 +544,14 @@ int main()
 		/* TEST MODE FOR CREATOR
 		else if (mode == 10) { 
 			int level;
-			cout << "½Ğ¿é¤J¹CÀ¸µ¥¯Å(«ØÄ³µ¥¯Å¡G4~9)\n";
+			cout << "è«‹è¼¸å…¥éŠæˆ²ç­‰ç´š(å»ºè­°ç­‰ç´šï¼š4~9)\n";
 			cin >> level;
 			
 		    srand( static_cast<int>( time( NULL ) ) );
 		    
 		    game1* g1; 
 		    g1 = new game1(level);
-		    cout << "½Ğ³]©w½L­±\n";
+		    cout << "è«‹è¨­å®šç›¤é¢\n";
 		    for (int i=0; i<level; i++)
 		    	for (int j=0; j<level; j++)
 		    		cin >> g1->board[j][i].value;		    
@@ -562,7 +562,7 @@ int main()
 		    srand( static_cast<int>( time( NULL ) ) );
 		    game2* g2; 
 		    g2 = new game2;
-		    cout << "½Ğ³]©w½L­±\n";
+		    cout << "è«‹è¨­å®šç›¤é¢\n";
 		    for (int i=0; i<4; i++)
 		    	for (int j=0; j<4; j++)
 		    		cin >> g2->board[j][i].value;
@@ -576,7 +576,7 @@ int main()
 		    srand( static_cast<int>( time( NULL ) ) );
 		    game22* g22; 
 		    g22 = new game22;
-		    cout << "½Ğ³]©w½L­±\n";
+		    cout << "è«‹è¨­å®šç›¤é¢\n";
 		    for (int i=0; i<4; i++)
 		    	for (int j=0; j<4; j++)
 		    		cin >> g22->board[j][i].value;
